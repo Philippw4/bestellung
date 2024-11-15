@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
+	<link
+            rel="icon"
+            href=
+"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAKlBMVEVHcEyDADCJADOFAjqCADOdFGuBADGDADGGADuHEVOAADl8CUSABz6AADSTFORKAAAADnRSTlMA/v5cuBHQ628mhTpKm527/LQAAAEVSURBVCiRrVLHYsUwCAOzPP//dyscv5H02CqXmCFAQPRntCEVkNkejrmcvxBL7HiG4qldRoPFrM2qwaySPufoI39g38gkqzDD7XMT32i1WhL6ux87ZZK4OysSAi+vROIvGGVU89g/tSBq1A0RIUnmRqrJs0oHRT9YRosZXI2TQYvkPBfW5tzl9whRBsJc89PIDi29refYUQx1jmidqUICXqi2EFGy4zgjFq2MKi3qLCCZ2SwkufoRciEotpZl0o6gOODROaJRyNiMXCCg1AN0OaGLNs+aqFxc74ClIDEnWlx+A+JC29zMkCemYSv62eftZs4+aYCWr0sAcEp9X8J83xAWiIhLBmb/3NCBjSm5s/G8vv/HDz43CdgfDlN4AAAAAElFTkSuQmCC"
+            type="image/x-icon"
+        />
+    <title>Bestellungen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .topnav {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topnav button {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .topnav button:hover {
+            background-color: #555;
+        }
+
+        .topnav button.active {
+            background-color: #4CAF50;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 80px auto 20px;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #fff;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            box-sizing: border-box;
+            background-color: #333;
+            border: 1px solid #444;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #333;
+        }
+
+        th {
+            background-color: #333;
+        }
+        
+        /* Angepasster Löschen-Button */
+        .delete-btn {
+            background-color: #444;
+            color: white;
+            border: 1px solid #555;
+            padding: 3px 8px; /* Höhe und horizontale Polsterung */
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+            width: 80px; /* Feste Breite für den Button */
+            text-align: center; /* Text wird zentriert */
+        }
+
+        .delete-btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <button onclick="location.href='Plan Wochenende PW.html'">Plan Wochenende</button>
+        <button onclick="location.href='Bestellung PW.html'" class="active">Bestellung</button>
+        <button onclick="location.href='LEER.html'">In Bearbeitung</button>
+    </div>
+
+    <div class="container">
+        <form id="azubiForm">
+            <label for="produkt">Produkt:</label>
+            <select id="produkt">
+				<option value="">Produkt auswählen</option>
+                <option value="ProduktA">Produkt A</option>
+                <option value="ProduktB">Produkt B</option>
+                <option value="ProduktC">Produkt C</option>
+            </select>
+            <label for="anzahl">Anzahl:</label>
+            <input type="number" id="anzahl" required>
+            <button type="button" onclick="addProdukte()">Produkt hinzufügen</button>
+        </form>
+
+        <h2>Produkt-Liste</h2>
+        <table id="produktTable">
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Anzahl</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            <tbody id="produktList"></tbody>
+        </table>
+
+        <button type="button" onclick="createPlan()">Produkte bestellen</button>
+        <div id="wochenplan"></div>
+    </div>
+
+    <script>
+        let produkte = [];
+
+        function addProdukte() {
+            const produkt = document.getElementById('produkt').value;
+            const anzahl = document.getElementById('anzahl').value;
+
+            // Überprüfen, ob das Produkt bereits in der Liste ist
+            const bestehendesProdukt = produkte.find(item => item.produkt === produkt);
+
+            if (bestehendesProdukt) {
+                alert(`Das Produkt "${produkt}" wurde bereits hinzugefügt.`);
+                return; // Wenn das Produkt schon existiert, wird nichts weiter gemacht
+            }
+
+            // Produkt zur Liste hinzufügen
+            produkte.push({ produkt, anzahl });
+
+            // Eingabefeld für die Anzahl zurücksetzen
+            document.getElementById('anzahl').value = '';
+
+            // Produkt in die Tabelle einfügen
+            const produktTableBody = document.getElementById('produktList');
+            const newRow = `<tr>
+                                <td>${produkt}</td>
+                                <td>${anzahl || 'Keine'}</td>
+                                <td><button class="delete-btn" onclick="deleteProdukt('${produkt}')">Löschen</button></td>
+                            </tr>`;
+            produktTableBody.innerHTML += newRow;
+        }
+
+        function deleteProdukt(produktName) {
+            // Produkt aus der Tabelle und der Liste entfernen
+            produkte = produkte.filter(item => item.produkt !== produktName);
+
+            // Tabelle neu rendern
+            renderTable();
+        }
+
+        function renderTable() {
+            const produktTableBody = document.getElementById('produktList');
+            produktTableBody.innerHTML = ''; // Tabelle zurücksetzen
+
+            produkte.forEach(item => {
+                const newRow = `<tr>
+                                    <td>${item.produkt}</td>
+                                    <td>${item.anzahl || 'Keine'}</td>
+                                    <td><button class="delete-btn" onclick="deleteProdukt('${item.produkt}')">Löschen</button></td>
+                                </tr>`;
+                produktTableBody.innerHTML += newRow;
+            });
+        }
+
+        async function createPlan() {
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Bestellungen');
+
+            worksheet.columns = [
+                { header: 'Produkt', key: 'input1', width: 30 },
+                { header: 'Anzahl', key: 'input2', width: 30 }
+            ];
+
+            produkte.forEach(item => {
+                worksheet.addRow({ input1: item.produkt, input2: item.anzahl });
+            });
+
+            const datum = new Date();
+            const tag = String(datum.getDate()).padStart(2, '0');
+            const monat = String(datum.getMonth() + 1).padStart(2, '0');
+            const jahr = datum.getFullYear();
+
+            const datumNeu = `${tag}.${monat}.${jahr}`;
+            const exceldatei = "Bestellung " + datumNeu;
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = exceldatei + '.xlsx';
+            link.click();
+        }
+    </script>
+</body>
+</html>
