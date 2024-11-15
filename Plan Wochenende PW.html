@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link
+            rel="icon"
+            href=
+"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAKlBMVEVHcEyDADCJADOFAjqCADOdFGuBADGDADGGADuHEVOAADl8CUSABz6AADSTFORKAAAADnRSTlMA/v5cuBHQ628mhTpKm527/LQAAAEVSURBVCiRrVLHYsUwCAOzPP//dyscv5H02CqXmCFAQPRntCEVkNkejrmcvxBL7HiG4qldRoPFrM2qwaySPufoI39g38gkqzDD7XMT32i1WhL6ux87ZZK4OysSAi+vROIvGGVU89g/tSBq1A0RIUnmRqrJs0oHRT9YRosZXI2TQYvkPBfW5tzl9whRBsJc89PIDi29refYUQx1jmidqUICXqi2EFGy4zgjFq2MKi3qLCCZ2SwkufoRciEotpZl0o6gOODROaJRyNiMXCCg1AN0OaGLNs+aqFxc74ClIDEnWlx+A+JC29zMkCemYSv62eftZs4+aYCWr0sAcEp9X8J83xAWiIhLBmb/3NCBjSm5s/G8vv/HDz43CdgfDlN4AAAAAElFTkSuQmCC"
+            type="image/x-icon"
+        />
+    <title>Wochenendplan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .topnav {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topnav button {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .topnav button:hover {
+            background-color: #555;
+        }
+
+        .topnav button.active {
+            background-color: #4CAF50;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 80px auto 20px;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #fff;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            box-sizing: border-box;
+            background-color: #333;
+            border: 1px solid #444;
+            color: #fff;
+        }
+
+        #exabteilung {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #exabteilung option {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #444;
+            color: #333;
+        }
+
+        .select2-container--default .select2-results__option {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .select2-container--default .select2-results__option--highlighted {
+            background-color: #444;
+            color: #333;
+        }
+
+        input[type="checkbox"] {
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #333;
+        }
+
+        th {
+            background-color: #333;
+        }
+
+        .checkbox-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .wrap {
+            min-width: 12em;
+            max-width: 12em;
+        }
+
+        .checkbox-group label {
+            flex: 1;
+            text-align: center;
+        }
+
+        #azubiList {
+            margin-top: 20px;
+        }
+
+        #wochenplan {
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        .plan-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .plan-table th,
+        .plan-table td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .plan-table th {
+            background-color: #333;
+        }
+
+        .plan-table .month-header {
+            background-color: #222;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topnav">
+        <button onclick="location.href='Plan Wochenende PW.html'" class="active">Plan Wochenende</button>
+        <button onclick="location.href='index.html'">Bestellung</button>
+        <button onclick="location.href='LEER.html'">In Bearbeitung</button>
+    </div>
+
+    <div class="container">
+        <form id="azubiForm">
+            <label for="name">Name des Mitarbeiters:</label>
+            <input type="text" id="name" required>
+
+            <label for="uhrzeitFreitag">Verfügbarkeit am Freitag:</label>
+            <select id="uhrzeitFreitag">
+            	<option value="">Nicht Verfügbar</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+            </select>
+
+            <label for="uhrzeitSamstag">Verfügbarkeit am Samstag:</label>
+            <select id="uhrzeitSamstag">
+                <option value="">Nicht Verfügbar</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+            </select>
+
+            <label for="uhrzeitSonntag">Verfügbarkeit am Sonntag:</label>
+            <select id="uhrzeitSonntag">
+                <option value="">Nicht Verfügbar</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+            </select>
+
+            <button type="button" onclick="addAzubi()">Mitarbeiter hinzufügen</button>
+        </form>
+
+        <h2>Mitarbeiter-Liste</h2>
+        <table id="azubiTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Freitag</th>
+                    <th>Samstag</th>
+                    <th>Sonntag</th>
+                </tr>
+            </thead>
+            <tbody id="azubiList"></tbody>
+        </table>
+
+        <button type="button" onclick="createPlan()">Plan erstellen</button>
+        <div id="wochenplan"></div>
+    </div>
+
+    <script>
+        let azubis = [];
+
+        function addAzubi() {
+            const name = document.getElementById('name').value;
+            const uhrzeitFreitag = document.getElementById('uhrzeitFreitag').value;
+            const uhrzeitSamstag = document.getElementById('uhrzeitSamstag').value;
+            const uhrzeitSonntag = document.getElementById('uhrzeitSonntag').value;
+
+            azubis.push({ name, uhrzeiten: { Freitag: uhrzeitFreitag, Samstag: uhrzeitSamstag, Sonntag: uhrzeitSonntag } });
+
+            document.getElementById('name').value = '';
+            document.getElementById('uhrzeitFreitag').value = '';
+            document.getElementById('uhrzeitSamstag').value = '';
+            document.getElementById('uhrzeitSonntag').value = '';
+
+            const azubiTableBody = document.getElementById('azubiList');
+            const newRow = `<tr>
+                                <td>${name}</td>
+                                <td>${uhrzeitFreitag || 'Keine'}</td>
+                                <td>${uhrzeitSamstag || 'Keine'}</td>
+                                <td>${uhrzeitSonntag || 'Keine'}</td>
+                            </tr>`;
+            azubiTableBody.innerHTML += newRow;
+        }
+
+        function createPlan() {
+            const tage = ['Freitag', 'Samstag', 'Sonntag'];
+            let plan = {};
+
+            azubis.forEach(azubi => {
+                tage.forEach(tag => {
+                    const uhrzeit = azubi.uhrzeiten[tag];
+                    if (uhrzeit) {
+                        if (!plan[uhrzeit]) plan[uhrzeit] = {};
+                        if (!plan[uhrzeit][tag]) plan[uhrzeit][tag] = [];
+                        plan[uhrzeit][tag].push(azubi.name);
+                    }
+                });
+            });
+
+            const sortierteUhrzeiten = Object.keys(plan).sort((a, b) => {
+                const [hourA, minuteA] = a.split(':').map(Number);
+                const [hourB, minuteB] = b.split(':').map(Number);
+                return hourA * 60 + minuteA - (hourB * 60 + minuteB);
+            });
+
+            let html = '<h2>Wochenendplan</h2>';
+            html += '<table class="plan-table"><thead><tr><th>Uhrzeit</th>';
+            tage.forEach(tag => {
+                html += `<th>${tag}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            sortierteUhrzeiten.forEach(uhrzeit => {
+                html += `<tr><td>${uhrzeit}</td>`;
+                tage.forEach(tag => {
+                    const names = plan[uhrzeit][tag] ? plan[uhrzeit][tag].join(', ') : '';
+                    html += `<td>${names}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('wochenplan').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
