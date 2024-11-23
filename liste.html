@@ -12,6 +12,31 @@
             color: #fff;
         }
 
+        #passwordOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        #passwordOverlay input {
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        #passwordOverlay button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
         .topnav {
             width: 100%;
             background-color: #333;
@@ -69,13 +94,13 @@
         }
 
         .table-container {
-            overflow-x: auto; /* Aktiviert horizontales Scrollen */
+            overflow-x: auto;
             margin-top: 20px;
         }
 
         table {
             width: 100%;
-            max-width: 90%; /* Begrenze die maximale Breite */
+            max-width: 90%;
             margin: 0 auto;
             border-collapse: collapse;
             color: #fff;
@@ -109,7 +134,7 @@
 
         @media screen and (max-width: 600px) {
             th, td {
-                font-size: 12px; /* Kleinere Schriftgröße für mobile Geräte */
+                font-size: 12px;
                 padding: 8px;
             }
 
@@ -120,13 +145,21 @@
     </style>
 </head>
 <body>
+    <!-- Passwort-Abfrage Overlay -->
+    <div id="passwordOverlay">
+        <div>
+            <input type="password" id="passwordInput" placeholder="Passwort eingeben">
+            <button onclick="checkPassword()">Login</button>
+        </div>
+    </div>
+
     <div class="topnav">
         <button onclick="location.href='Plan Wochenende PW.html'">Plan Wochenende</button>
         <button onclick="location.href='Bestellung PW.html'">Bestellung</button>
         <button onclick="location.href='liste.html'" class="active">Liste bearbeiten</button>
     </div>
 
-    <div class="container">
+    <div class="container" id="mainContent" style="display: none;">
         <h1>Lebensmittel-Liste bearbeiten</h1>
 
         <label for="neuesProdukt">Neues Lebensmittel eingeben:</label>
@@ -160,6 +193,17 @@
 
     <script>
         const produktListe = [];
+        const password = "meinPasswort"; // Setze hier das gewünschte Passwort
+
+        function checkPassword() {
+            const userInput = document.getElementById('passwordInput').value;
+            if (userInput === password) {
+                document.getElementById('passwordOverlay').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } else {
+                alert("Falsches Passwort!");
+            }
+        }
 
         function addProdukt() {
             const produktName = document.getElementById('neuesProdukt').value.trim();
