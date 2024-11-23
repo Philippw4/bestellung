@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebensmittel-Liste bearbeiten</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .container {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #333;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+        }
+
+        td input {
+            background-color: #333;
+            border: 1px solid #444;
+            color: #fff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lebensmittel-Liste bearbeiten</h1>
+
+        <label for="neuesProdukt">Neues Lebensmittel eingeben:</label>
+        <input type="text" id="neuesProdukt" placeholder="Produktname">
+        <input type="text" id="artikelnummer" placeholder="Artikelnummer">
+        <input type="text" id="chinesischerName" placeholder="Chinesischer Name">
+        <input type="text" id="einheit" placeholder="Einheit (z.B. kg)">
+        <input type="number" id="menge" placeholder="Menge" min="1">
+        <button onclick="addProdukt()">Produkt hinzufügen</button>
+
+        <h2>Lebensmittel-Liste:</h2>
+
+        <table id="produktListe">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Produkt</th>
+                    <th>Artikelnummer</th>
+                    <th>Chinesischer Name</th>
+                    <th>Einheit</th>
+                    <th>Menge</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Hier werden die Produkte angezeigt -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Array, um die Produkte zu speichern
+        const produktListe = [];
+
+        // Funktion zum Hinzufügen eines neuen Produkts zur Liste
+        function addProdukt() {
+            const produktName = document.getElementById('neuesProdukt').value.trim();
+            const artikelnummer = document.getElementById('artikelnummer').value.trim();
+            const chinesischerName = document.getElementById('chinesischerName').value.trim();
+            const einheit = document.getElementById('einheit').value.trim();
+            const menge = document.getElementById('menge').value.trim();
+
+            // Überprüfen, ob alle Eingabefelder ausgefüllt sind
+            if (produktName && artikelnummer && chinesischerName && einheit && menge) {
+                // Neues Produkt zur Liste hinzufügen
+                const produkt = {
+                    position: produktListe.length + 1,
+                    name: produktName,
+                    artikelnummer: artikelnummer,
+                    chinesischerName: chinesischerName,
+                    einheit: einheit,
+                    menge: menge
+                };
+
+                produktListe.push(produkt);
+                renderProduktListe();
+
+                // Eingabefelder leeren
+                document.getElementById('neuesProdukt').value = '';
+                document.getElementById('artikelnummer').value = '';
+                document.getElementById('chinesischerName').value = '';
+                document.getElementById('einheit').value = '';
+                document.getElementById('menge').value = '';
+            } else {
+                alert("Bitte füllen Sie alle Felder aus!");
+            }
+        }
+
+        // Funktion zum Rendern der Produktliste
+        function renderProduktListe() {
+            const tbody = document.querySelector('#produktListe tbody');
+            tbody.innerHTML = ''; // Tabelle leeren
+
+            produktListe.forEach((produkt, index) => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td>${produkt.position}</td>
+                    <td>${produkt.name}</td>
+                    <td>${produkt.artikelnummer}</td>
+                    <td>${produkt.chinesischerName}</td>
+                    <td>${produkt.einheit}</td>
+                    <td>${produkt.menge}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteProdukt(${index})">Löschen</button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Funktion zum Löschen eines Produkts aus der Liste
+        function deleteProdukt(index) {
+            produktListe.splice(index, 1); // Produkt aus dem Array entfernen
+            renderProduktListe(); // Liste neu rendern
+        }
+    </script>
+
+</body>
+</html>
