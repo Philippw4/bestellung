@@ -68,16 +68,23 @@
             color: #fff;
         }
 
+        .table-container {
+            overflow-x: auto; /* Aktiviert horizontales Scrollen */
+            margin-top: 20px;
+        }
+
         table {
             width: 100%;
+            max-width: 90%; /* Begrenze die maximale Breite */
+            margin: 0 auto;
             border-collapse: collapse;
-            margin-top: 20px;
             color: #fff;
         }
 
         th, td {
             padding: 10px;
             border: 1px solid #333;
+            text-align: left;
         }
 
         th {
@@ -93,12 +100,22 @@
             border-radius: 5px;
             font-size: 12px;
             transition: background-color 0.3s ease;
-            width: 80px;
             text-align: center;
         }
 
         .delete-btn:hover {
             background-color: #555;
+        }
+
+        @media screen and (max-width: 600px) {
+            th, td {
+                font-size: 12px; /* Kleinere Schriftgröße für mobile Geräte */
+                padding: 8px;
+            }
+
+            .delete-btn {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -121,29 +138,29 @@
         <button onclick="addProdukt()">Produkt hinzufügen</button>
 
         <h2>Lebensmittel-Liste</h2>
-        <table id="produktListe">
-            <thead>
-                <tr>
-                    <th>Position</th>
-                    <th>Produkt</th>
-                    <th>Artikelnummer</th>
-                    <th>Chinesischer Name</th>
-                    <th>Einheit</th>
-                    <th>Menge</th>
-                    <th>Aktion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Hier werden die Produkte angezeigt -->
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table id="produktListe">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Produkt</th>
+                        <th>Artikelnummer</th>
+                        <th>Chinesischer Name</th>
+                        <th>Einheit</th>
+                        <th>Menge</th>
+                        <th>Aktion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Hier werden die Produkte angezeigt -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        // Array, um die Produkte zu speichern
         const produktListe = [];
 
-        // Funktion zum Hinzufügen eines neuen Produkts
         function addProdukt() {
             const produktName = document.getElementById('neuesProdukt').value.trim();
             const artikelnummer = document.getElementById('artikelnummer').value.trim();
@@ -151,9 +168,7 @@
             const einheit = document.getElementById('einheit').value.trim();
             const menge = document.getElementById('menge').value.trim();
 
-            // Überprüfen, ob alle Eingabefelder ausgefüllt sind
             if (produktName && artikelnummer && chinesischerName && einheit && menge) {
-                // Neues Produkt hinzufügen
                 const produkt = {
                     position: produktListe.length + 1,
                     name: produktName,
@@ -166,7 +181,6 @@
                 produktListe.push(produkt);
                 renderProduktListe();
 
-                // Eingabefelder leeren
                 document.getElementById('neuesProdukt').value = '';
                 document.getElementById('artikelnummer').value = '';
                 document.getElementById('chinesischerName').value = '';
@@ -177,10 +191,9 @@
             }
         }
 
-        // Funktion zum Rendern der Produktliste
         function renderProduktListe() {
             const tbody = document.querySelector('#produktListe tbody');
-            tbody.innerHTML = ''; // Tabelle zurücksetzen
+            tbody.innerHTML = '';
 
             produktListe.forEach((produkt, index) => {
                 const tr = document.createElement('tr');
@@ -201,10 +214,9 @@
             });
         }
 
-        // Funktion zum Löschen eines Produkts
         function deleteProdukt(index) {
-            produktListe.splice(index, 1); // Produkt entfernen
-            renderProduktListe(); // Liste neu rendern
+            produktListe.splice(index, 1);
+            renderProduktListe();
         }
     </script>
 </body>
