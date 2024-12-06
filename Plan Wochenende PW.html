@@ -3,6 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
+    <title>Bestellungen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .topnav {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topnav .menu-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .topnav .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .topnav .nav-links li {
+            padding: 0 10px;
+        }
+
+        .topnav .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 17px;
+            display: block;
+        }
+
+        .topnav .nav-links a:hover,
+        .topnav .nav-links a.active {
+            background-color: #4CAF50;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        .product-list,
+        .selected-list {
+            width: 45%;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        ul li:hover {
+            background-color: #555;
+        }
+
+        ul li span {
+            margin-left: 10px;
+            color: #ccc;
+        }
+
+        .delete-btn {
+            background-color: #444;
+            color: white;
+            border: 1px solid #555;
+            padding: 3px 8px; 
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+            width: 80px; 
+            text-align: center; 
+        }
+
+        .delete-btn:hover {
+            background-color: #555;
+        }
+
+        .bestellen-btn {
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .bestellen-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .topnav .menu-icon {
+                display: block; /* Hamburger-Menü anzeigen */
+            }
+
+            .topnav .nav-links {
+                display: none; /* Verstecken der Links */
+                flex-direction: column;
+                background-color: #333;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                z-index: 999;
+            }
+
+            .topnav .nav-links.show {
+                display: flex; /* Anzeigen der Links */
+            }
+
+            .topnav .nav-links a {
+                padding: 10px 20px;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
+        <ul class="nav-links">
+            <li><a href="Plan Wochenende PW.html">Plan Wochenende</a></li>
+            <li><a href="Bestellung PW.html" class="active">Bestellung</a></li>
+            <li><a href="liste.html">In Bearbeitung</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="product-list">
+            <h2>Produkte</h2>
+            <ul id="availableProducts"></ul>
+        </div>
+        <div class="selected-list">
+            <h2>Ausgewählte Produkte</h2>
+            <ul id="selectedProducts"></ul>
+        </div>
+    </div>
+
+    <button type="button" class="bestellen-btn" onclick="createPlan()">Produkte bestellen</button>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                navLinks.classList.toggle('show');
+            } else {
+                console.error('Das Element ".nav-links" wurde nicht gefunden!');
+            }
+        }
+
+        const alleProdukte = ["Produkt A", "Produkt B", "Produkt C", "Produkt D", "Produkt E"];
+        let ausgewählteProdukte = [];
+
+        function renderLists() {
+            const availableProducts = document.getElementById("availableProducts");
+            const selectedProducts = document.getElementById("selectedProducts");
+
+            availableProducts.innerHTML = '';
+            alleProdukte.forEach(produkt => {
+                const li = document.createElement("li");
+                li.textContent = produkt;
+                li.onclick = () => addProdukt(produkt);
+                availableProducts.appendChild(li);
+            });
+
+            selectedProducts.innerHTML = '';
+            ausgewählteProdukte.forEach(item => {
+                const li = document.createElement("li");
+                li.innerHTML = `${item.produkt} 
+                                <span>(Anzahl: ${item.anzahl})</span>
+                                <button class="delete-btn" onclick="removeProdukt('${item.produkt}')">Löschen</button>`;
+                selectedProducts.appendChild(li);
+            });
+        }
+
+        function addProdukt(produktName) {
+            const anzahl = prompt(`Wie viele "${produktName}" möchten Sie hinzufügen?`, 1);
+            if (!anzahl || isNaN(anzahl) || anzahl <= 0) {
+                alert("Bitte eine gültige Anzahl eingeben!");
+                return;
+            }
+
+            ausgewählteProdukte.push({ produkt: produktName, anzahl });
+            const index = alleProdukte.indexOf(produktName);
+            alleProdukte.splice(index, 1);
+
+            renderLists();
+        }
+
+        function removeProdukt(produktName) {
+            const produkt = ausgewählteProdukte.find(item => item.produkt === produktName);
+            alleProdukte.push(produktName);
+            ausgewählteProdukte = ausgewählteProdukte.filter(item => item.produkt !== produktName);
+
+            renderLists();
+        }
+
+        async function createPlan() {
+            if (ausgewählteProdukte.length === 0) {
+                alert("Keine Produkte ausgewählt!");
+                return;
+            }
+
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Bestellungen');
+
+            worksheet.columns = [
+                { header: 'Produkt', key: 'input1', width: 30 },
+                { header: 'Anzahl', key: 'input2', width: 30 }
+            ];
+
+            ausgewählteProdukte.forEach(item => {
+                worksheet.addRow({ input1: item.produkt, input2: item.anzahl });
+            });
+
+            const datum = new Date();
+            const tag = String(datum.getDate()).padStart(2, '0');
+            const monat = String(datum.getMonth() + 1).padStart(2, '0');
+            const jahr = datum.getFullYear();
+            const exceldatei = `Bestellung ${tag}.${monat}.${jahr}`;
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = exceldatei + '.xlsx';
+            link.click();
+        }
+
+        renderLists();
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link
             rel="icon"
             href=
@@ -159,7 +442,7 @@
             color: #fff;
         }
 
-        .plan-table {
+        .plan-table {                                                                          
             width: 100%;
             border-collapse: collapse;
         }
