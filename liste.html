@@ -11,103 +11,95 @@
             background-color: #111;
             color: #fff;
         }
-
-        #passwordOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        #passwordOverlay input {
-            padding: 10px;
-            margin-right: 10px;
-            font-size: 16px;
-        }
-
-        #passwordOverlay button {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
+        
         .topnav {
             width: 100%;
             background-color: #333;
             overflow: hidden;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            padding: 10px 20px;
             position: fixed;
             top: 0;
             z-index: 1000;
         }
 
-        .topnav button {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-            font-size: 17px;
-            background: none;
-            border: none;
+        .menu-icon {
+            display: none;
+            font-size: 24px;
             cursor: pointer;
+            color: white;
         }
 
-        .topnav button:hover {
-            background-color: #555;
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .topnav button.active {
+        .nav-links li {
+            padding: 0 10px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 17px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
             background-color: #4CAF50;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 80px auto 20px;
-            padding: 20px;
-            background-color: #222;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .menu-icon {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background-color: #333;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 10px 20px;
+                text-align: left;
+            }
         }
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
+        .container {
+            margin-top: 80px;
+            text-align: center;
         }
 
         input, button {
-            width: 100%;
             padding: 10px;
-            margin: 5px 0 20px;
-            box-sizing: border-box;
-            background-color: #333;
-            border: 1px solid #444;
-            color: #fff;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
+            font-size: 16px;
+            margin: 5px;
         }
 
         table {
-            width: 100%;
-            max-width: 90%;
-            margin: 0 auto;
+            width: 80%;
+            margin: 20px auto;
             border-collapse: collapse;
-            color: #fff;
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #333;
             text-align: left;
         }
@@ -116,50 +108,53 @@
             background-color: #333;
         }
 
-        .delete-btn {
-            background-color: #444;
-            color: white;
-            border: 1px solid #555;
-            padding: 3px 8px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 12px;
-            transition: background-color 0.3s ease;
-            text-align: center;
+        td input {
+            background-color: #333;
+            border: 1px solid #444;
+            color: #fff;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .delete-btn:hover {
+        button {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
             background-color: #555;
         }
 
-        @media screen and (max-width: 600px) {
-            th, td {
-                font-size: 12px;
-                padding: 8px;
-            }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-            .delete-btn {
-                font-size: 10px;
-            }
+        .delete-btn:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
 <body>
-    <!-- Passwort-Abfrage Overlay -->
-    <div id="passwordOverlay">
-        <div>
-            <input type="password" id="passwordInput" placeholder="Passwort eingeben">
-            <button onclick="checkPassword()">Login</button>
-        </div>
-    </div>
 
     <div class="topnav">
-        <button onclick="location.href='Plan Wochenende PW.html'">Plan Wochenende</button>
-        <button onclick="location.href='Bestellung PW.html'">Bestellung</button>
-        <button onclick="location.href='liste.html'" class="active">Liste bearbeiten</button>
+        <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
+        <ul class="nav-links">
+            <li><a href="Plan Wochenende PW.html">Plan Wochenende</a></li>
+            <li><a href="index.html">Bestellung</a></li>
+            <li><a href="liste.html" class="active">In Bearbeitung</a></li>
+        </ul>
     </div>
 
-    <div class="container" id="mainContent" style="display: none;">
+    <div class="container">
         <h1>Lebensmittel-Liste bearbeiten</h1>
 
         <label for="neuesProdukt">Neues Lebensmittel eingeben:</label>
@@ -170,40 +165,33 @@
         <input type="number" id="menge" placeholder="Menge" min="1">
         <button onclick="addProdukt()">Produkt hinzufügen</button>
 
-        <h2>Lebensmittel-Liste</h2>
-        <div class="table-container">
-            <table id="produktListe">
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Produkt</th>
-                        <th>Artikelnummer</th>
-                        <th>Chinesischer Name</th>
-                        <th>Einheit</th>
-                        <th>Menge</th>
-                        <th>Aktion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Hier werden die Produkte angezeigt -->
-                </tbody>
-            </table>
-        </div>
+        <h2>Lebensmittel-Liste:</h2>
+
+        <table id="produktListe">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Produkt</th>
+                    <th>Artikelnummer</th>
+                    <th>Chinesischer Name</th>
+                    <th>Einheit</th>
+                    <th>Menge</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Hier werden die Produkte angezeigt -->
+            </tbody>
+        </table>
     </div>
 
     <script>
-        const produktListe = [];
-        const password = "meinPasswort"; // Setze hier das gewünschte Passwort
-
-        function checkPassword() {
-            const userInput = document.getElementById('passwordInput').value;
-            if (userInput === password) {
-                document.getElementById('passwordOverlay').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-            } else {
-                alert("Falsches Passwort!");
-            }
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('show');
         }
+
+        const produktListe = [];
 
         function addProdukt() {
             const produktName = document.getElementById('neuesProdukt').value.trim();
@@ -263,5 +251,6 @@
             renderProduktListe();
         }
     </script>
+
 </body>
 </html>
