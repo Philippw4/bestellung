@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
-	<link
-            rel="icon"
-            href=
-"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAKlBMVEVHcEyDADCJADOFAjqCADOdFGuBADGDADGGADuHEVOAADl8CUSABz6AADSTFORKAAAADnRSTlMA/v5cuBHQ628mhTpKm527/LQAAAEVSURBVCiRrVLHYsUwCAOzPP//dyscv5H02CqXmCFAQPRntCEVkNkejrmcvxBL7HiG4qldRoPFrM2qwaySPufoI39g38gkqzDD7XMT32i1WhL6ux87ZZK4OysSAi+vROIvGGVU89g/tSBq1A0RIUnmRqrJs0oHRT9YRosZXI2TQYvkPBfW5tzl9whRBsJc89PIDi29refYUQx1jmidqUICXqi2EFGy4zgjFq2MKi3qLCCZ2SwkufoRciEotpZl0o6gOODROaJRyNiMXCCg1AN0OaGLNs+aqFxc74ClIDEnWlx+A+JC29zMkCemYSv62eftZs4+aYCWr0sAcEp9X8J83xAWiIhLBmb/3NCBjSm5s/G8vv/HDz43CdgfDlN4AAAAAElFTkSuQmCC"
-            type="image/x-icon"
-        />
     <title>Bestellungen</title>
     <style>
         body {
@@ -24,187 +18,239 @@
             background-color: #333;
             overflow: hidden;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            padding: 10px 20px;
             position: fixed;
             top: 0;
             z-index: 1000;
         }
 
-        .topnav button {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-            font-size: 17px;
-            background: none;
-            border: none;
+        .topnav .menu-icon {
+            display: none;
+            font-size: 24px;
             cursor: pointer;
+            color: white;
         }
 
-        .topnav button:hover {
-            background-color: #555;
+        .topnav .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .topnav button.active {
+        .topnav .nav-links li {
+            padding: 0 10px;
+        }
+
+        .topnav .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 17px;
+            display: block;
+        }
+
+        .topnav .nav-links a:hover,
+        .topnav .nav-links a.active {
             background-color: #4CAF50;
         }
 
-        form {
-            max-width: 600px;
-            margin: 80px auto 20px;
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 80px;
             padding: 20px;
+        }
+
+        .product-list,
+        .selected-list {
+            width: 45%;
             background-color: #222;
+            padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
+        h2 {
+            text-align: center;
             color: #fff;
         }
 
-        input,
-        select,
-        button {
-            width: 100%;
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
             padding: 10px;
-            margin: 5px 0 20px;
-            box-sizing: border-box;
+            margin: 5px 0;
             background-color: #333;
             border: 1px solid #444;
-            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            color: #fff;
+        ul li:hover {
+            background-color: #555;
         }
 
-        th,
-        td {
-            padding: 10px;
-            border: 1px solid #333;
+        ul li span {
+            margin-left: 10px;
+            color: #ccc;
         }
 
-        th {
-            background-color: #333;
-        }
-        
-        /* Angepasster Löschen-Button */
         .delete-btn {
             background-color: #444;
             color: white;
             border: 1px solid #555;
-            padding: 3px 8px; /* Höhe und horizontale Polsterung */
+            padding: 3px 8px; 
             cursor: pointer;
             border-radius: 5px;
             font-size: 12px;
             transition: background-color 0.3s ease;
-            width: 80px; /* Feste Breite für den Button */
-            text-align: center; /* Text wird zentriert */
+            width: 80px; 
+            text-align: center; 
         }
 
         .delete-btn:hover {
             background-color: #555;
         }
+
+        .bestellen-btn {
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .bestellen-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .topnav .menu-icon {
+                display: block; /* Hamburger-Menü anzeigen */
+            }
+
+            .topnav .nav-links {
+                display: none; /* Verstecken der Links */
+                flex-direction: column;
+                background-color: #333;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                z-index: 999;
+            }
+
+            .topnav .nav-links.show {
+                display: flex; /* Anzeigen der Links */
+            }
+
+            .topnav .nav-links a {
+                padding: 10px 20px;
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="topnav">
-        <button onclick="location.href='Plan Wochenende PW.html'">Plan Wochenende</button>
-        <button onclick="location.href='Bestellung PW.html'" class="active">Bestellung</button>
-        <button onclick="location.href='liste.html'">Liste bearbeiten</button>
+        <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
+        <ul class="nav-links">
+            <li><a href="Plan Wochenende PW.html">Plan Wochenende</a></li>
+            <li><a href="Bestellung PW.html" class="active">Bestellung</a></li>
+            <li><a href="liste.html">In Bearbeitung</a></li>
+        </ul>
     </div>
 
     <div class="container">
-        <form id="azubiForm">
-            <label for="produkt">Produkt:</label>
-            <select id="produkt">
-				<option value="">Produkt auswählen</option>
-                <option value="ProduktA">Produkt A</option>
-                <option value="ProduktB">Produkt B</option>
-                <option value="ProduktC">Produkt C</option>
-            </select>
-            <label for="anzahl">Anzahl:</label>
-            <input type="number" id="anzahl" required>
-            <button type="button" onclick="addProdukte()">Produkt hinzufügen</button>
-        </form>
-
-        <h2>Produkt-Liste</h2>
-        <table id="produktTable">
-            <thead>
-                <tr>
-                    <th>Produkt</th>
-                    <th>Anzahl</th>
-                    <th>Aktion</th>
-                </tr>
-            </thead>
-            <tbody id="produktList"></tbody>
-        </table>
-
-        <button type="button" onclick="createPlan()">Produkte bestellen</button>
-        <div id="wochenplan"></div>
+        <div class="product-list">
+            <h2>Produkte</h2>
+            <ul id="availableProducts"></ul>
+        </div>
+        <div class="selected-list">
+            <h2>Ausgewählte Produkte</h2>
+            <ul id="selectedProducts"></ul>
+        </div>
     </div>
 
+    <button type="button" class="bestellen-btn" onclick="createPlan()">Produkte bestellen</button>
+
     <script>
-        let produkte = [];
-
-        function addProdukte() {
-            const produkt = document.getElementById('produkt').value;
-            const anzahl = document.getElementById('anzahl').value;
-
-            // Überprüfen, ob das Produkt bereits in der Liste ist
-            const bestehendesProdukt = produkte.find(item => item.produkt === produkt);
-
-            if (bestehendesProdukt) {
-                alert(`Das Produkt "${produkt}" wurde bereits hinzugefügt.`);
-                return; // Wenn das Produkt schon existiert, wird nichts weiter gemacht
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                navLinks.classList.toggle('show');
+            } else {
+                console.error('Das Element ".nav-links" wurde nicht gefunden!');
             }
-
-            // Produkt zur Liste hinzufügen
-            produkte.push({ produkt, anzahl });
-
-            // Eingabefeld für die Anzahl zurücksetzen
-            document.getElementById('anzahl').value = '';
-
-            // Produkt in die Tabelle einfügen
-            const produktTableBody = document.getElementById('produktList');
-            const newRow = `<tr>
-                                <td>${produkt}</td>
-                                <td>${anzahl || 'Keine'}</td>
-                                <td><button class="delete-btn" onclick="deleteProdukt('${produkt}')">Löschen</button></td>
-                            </tr>`;
-            produktTableBody.innerHTML += newRow;
         }
 
-        function deleteProdukt(produktName) {
-            // Produkt aus der Tabelle und der Liste entfernen
-            produkte = produkte.filter(item => item.produkt !== produktName);
+        const alleProdukte = ["Produkt A", "Produkt B", "Produkt C", "Produkt D", "Produkt E"];
+        let ausgewählteProdukte = [];
 
-            // Tabelle neu rendern
-            renderTable();
-        }
+        function renderLists() {
+            const availableProducts = document.getElementById("availableProducts");
+            const selectedProducts = document.getElementById("selectedProducts");
 
-        function renderTable() {
-            const produktTableBody = document.getElementById('produktList');
-            produktTableBody.innerHTML = ''; // Tabelle zurücksetzen
+            availableProducts.innerHTML = '';
+            alleProdukte.forEach(produkt => {
+                const li = document.createElement("li");
+                li.textContent = produkt;
+                li.onclick = () => addProdukt(produkt);
+                availableProducts.appendChild(li);
+            });
 
-            produkte.forEach(item => {
-                const newRow = `<tr>
-                                    <td>${item.produkt}</td>
-                                    <td>${item.anzahl || 'Keine'}</td>
-                                    <td><button class="delete-btn" onclick="deleteProdukt('${item.produkt}')">Löschen</button></td>
-                                </tr>`;
-                produktTableBody.innerHTML += newRow;
+            selectedProducts.innerHTML = '';
+            ausgewählteProdukte.forEach(item => {
+                const li = document.createElement("li");
+                li.innerHTML = `${item.produkt} 
+                                <span>(Anzahl: ${item.anzahl})</span>
+                                <button class="delete-btn" onclick="removeProdukt('${item.produkt}')">Löschen</button>`;
+                selectedProducts.appendChild(li);
             });
         }
 
+        function addProdukt(produktName) {
+            const anzahl = prompt(`Wie viele "${produktName}" möchten Sie hinzufügen?`, 1);
+            if (!anzahl || isNaN(anzahl) || anzahl <= 0) {
+                alert("Bitte eine gültige Anzahl eingeben!");
+                return;
+            }
+
+            ausgewählteProdukte.push({ produkt: produktName, anzahl });
+            const index = alleProdukte.indexOf(produktName);
+            alleProdukte.splice(index, 1);
+
+            renderLists();
+        }
+
+        function removeProdukt(produktName) {
+            const produkt = ausgewählteProdukte.find(item => item.produkt === produktName);
+            alleProdukte.push(produktName);
+            ausgewählteProdukte = ausgewählteProdukte.filter(item => item.produkt !== produktName);
+
+            renderLists();
+        }
+
         async function createPlan() {
+            if (ausgewählteProdukte.length === 0) {
+                alert("Keine Produkte ausgewählt!");
+                return;
+            }
+
             const workbook = new ExcelJS.Workbook();
             const worksheet = workbook.addWorksheet('Bestellungen');
 
@@ -213,7 +259,7 @@
                 { header: 'Anzahl', key: 'input2', width: 30 }
             ];
 
-            produkte.forEach(item => {
+            ausgewählteProdukte.forEach(item => {
                 worksheet.addRow({ input1: item.produkt, input2: item.anzahl });
             });
 
@@ -221,9 +267,7 @@
             const tag = String(datum.getDate()).padStart(2, '0');
             const monat = String(datum.getMonth() + 1).padStart(2, '0');
             const jahr = datum.getFullYear();
-
-            const datumNeu = `${tag}.${monat}.${jahr}`;
-            const exceldatei = "Bestellung " + datumNeu;
+            const exceldatei = `Bestellung ${tag}.${monat}.${jahr}`;
 
             const buffer = await workbook.xlsx.writeBuffer();
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -232,6 +276,8 @@
             link.download = exceldatei + '.xlsx';
             link.click();
         }
+
+        renderLists();
     </script>
 </body>
 </html>
